@@ -32,12 +32,11 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.opencsv.CSVWriter;
 
-
 @RestController
 @RequestMapping("/jira1")
 @CrossOrigin("*")
 public class CsvFile {
-	
+
 	private static String makeFileUploadRequest(String apiUrl, String authorizationHeader, String filePath)
 			throws Exception {
 		URL url = new URL(apiUrl);
@@ -86,7 +85,7 @@ public class CsvFile {
 
 		return response.toString();
 	}
-	
+
 	@GetMapping("/getallCSV")
 	public String getissueCSV() throws IOException {
 
@@ -97,113 +96,93 @@ public class CsvFile {
 		String outputFilePath = "D:\\JAVA.csv";
 		List<Object> listOfIsuue = new ArrayList<>();
 
-		try {
+		try (CSVWriter csvWriter = new CSVWriter(new FileWriter(outputFilePath))) {
+			String[] header = { "Key", "Summary", "Issue Type" };
+			csvWriter.writeNext(header);
 			while (true) {
-//					HttpResponse<JsonNode> response = Unirest.get("http://172.16.1.86:8082/rest/api/2/search")
-//							.basicAuth("admin1", "123456")
-//							.header("Accept", "application/json")
-//							.queryString("jql", "project = MT")
-				HttpResponse<JsonNode> response = Unirest.get("https://qim-dev.atlassian.net/rest/api/3/search")
-						.basicAuth("vikram221999@gmail.com",
-								"ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740")
-//						
-//					HttpResponse<JsonNode> response = Unirest.get("http://172.16.1.86:8082/rest/api/2/search")
-//				.basicAuth("admin1", "123456")
-						.header("Accept", "application/json").queryString("jql", "project =QJP")
+//				 String jiraBaseUrl = "https://qim-dev.atlassian.net";
+//			        String projectKey = "QJP";
+//			        String username = "vikram221999@gmail.com";
+//			        String apiToken = "ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740";
+//
+//			        // Build the Jira API search URL
+//			        String apiUrl = jiraBaseUrl + "/rest/api/3/search";
+//			        String jqlQuery = "project=" + projectKey;
+//			        String fields = "issuetype,subtasks,summary,description";
+//
+//			        HttpResponse<JsonNode> response = Unirest.get(apiUrl)
+//			                .basicAuth(username, apiToken)
+//			                .header("Accept", "application/json")
+//			                .queryString("jql", jqlQuery)
+//			                .queryString("fields", fields)
+//			                .asJson();
+
+				String jiraBaseUrl = "http://172.16.1.86:8082";
+				String projectKey = "MT";
+				String username = "admin1";
+				String apiToken = "123456";
+
+				// Build the Jira API search URL
+				String apiUrl = jiraBaseUrl + "/rest/api/2/search";
+				String jqlQuery = "project=" + projectKey;
+				String fields = "issuetype,subtasks,summary,description";
+
+				HttpResponse<JsonNode> response = Unirest.get(apiUrl).basicAuth(username, apiToken)
+						.header("Accept", "application/json").queryString("jql", jqlQuery).queryString("fields", fields)
 						.queryString("startAt", startAt).queryString("maxResults", maxResults).asJson();
 
-				// JsonNode responseBody = response.getBody();
 				JsonNode responseBody = response.getBody();
-				//System.out.println(response.getBody());
+
 				ObjectMapper objectMapper = new ObjectMapper();
-				objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-				
-                Object demo = response.getBody().getObject().get("issues");
-                String jsonString = objectMapper.writeValueAsString(demo);
-                
-                JsonFactory jsonFactory = new JsonFactory();
-                JsonParser jsonParser = jsonFactory.createParser(jsonString);
+				Object demo = response.getBody().getObject().get("issues");
+				com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(demo.toString());
 
-               // ObjectMapper objectMapper = new ObjectMapper();
+				// Process each issue in the array and write to CSV
+				for (com.fasterxml.jackson.databind.JsonNode issueNode : jsonNode) {
+					String key = issueNode.path("key").asText();
+					System.out.println(key);
+					String summary = issueNode.path("fields").path("summary").asText();
+					String issueType = issueNode.path("fields").path("issuetype").path("name").asText();
 
-                List<Map<String, Object>> resultList = new ArrayList<>();
+					// Write the data to CSV
+					csvWriter.writeNext(new String[] { key, summary, issueType });
+				}
 
-                while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
-                    if (jsonParser.getCurrentToken() == JsonToken.START_OBJECT) {
-                        Map<String, Object> data = objectMapper.readValue(jsonParser, new TypeReference<Map<String, Object>>(){});
-                        resultList.add(data);
-                    }
-                }
+				System.out.println("CSV file created successfully at: " + outputFilePath);
 
-                // Process resultList as needed
-                System.out.println(resultList);
-                
-                
+				if (response.getStatus() == 200) {
+					System.out.println(demo);
 
-                if (response.getStatus() == 200) {
-                   System.out.println(demo);
-                    listOfIsuue.add(jsonString);
-                } else {
-                    System.err.println("Request failed with status: " + response.getStatus());
-                    System.err.println("Response body: " + response.getBody());
-                }
+				} else {
+					System.err.println("Request failed with status: " + response.getStatus());
+					System.err.println("Response body: " + response.getBody());
+				}
 
-                int total = responseBody.getObject().getInt("total");
-                System.err.println(total);
-                startAt += maxResults;
+				int total = responseBody.getObject().getInt("total");
+				System.err.println(total);
+				startAt += maxResults;
 
-                if (startAt >= total) {
-                    // All data has been retrieved
-                    break;
-                }
-            }
+				if (startAt >= total) {
+					break;
+				}
+			}
 
-            try (CSVWriter writer = new CSVWriter(new FileWriter(outputFilePath))) {
-                // Write header
-                String[] header = {"IssueKey", "Summary", "Description" /* Add other field names as needed */};
-                writer.writeNext(header);
+		} catch (UnirestException e) {
+			throw new RuntimeException(e);
+		}
 
-                // Iterate through the issues and write data to CSV
-                for (Object issue : listOfIsuue) {
-                	 ObjectMapper objectMapper = new ObjectMapper();
-                	    Map<String, Object> issueMap = objectMapper.convertValue(issue, Map.class);
-
-                	    String issueKey = issueMap.get("key").toString();
-
-                	    // Assuming "fields" is an object within each issue
-                	    Map<String, Object> fields = (Map<String, Object>) issueMap.get("fields");
-
-                	    // Assuming "summary" and "description" are fields within the "fields" object
-                	    String summary = fields.get("summary").toString();
-                	    String description = fields.get("description").toString();
-                    String[] data = {issueKey, summary, description /* Add other values as needed */};
-                    writer.writeNext(data);
-                }
-
-                System.out.println("CSV written to file: " + outputFilePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } catch (UnirestException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Additional code for file upload...
-        String apiUrl = "https://storage.googleapis.com/upload/storage/v1/b/pega_data/o?uploadType=media&name=JAVACSV.csv";
-        String authorizationHeader = "Bearer ya29.a0AfB_byAbsZunQD56L7yC1mN565XMwPrycg0rdbQmPe5fGSjG3qy16tH02kunN1gC9LyNfNQxIYk9Ne6dMV0Ew8RTar4oThQ0VVUUlk6e8dzK68CUvPlwgDKcDtzsQd1LjwLfgo2S7V1aZoW2cF163hvDcE1bS1F5U2RWHgaCgYKAeASARMSFQHGX2Mi1vmbqq249Xdd63olbtyZ-A0173";
-        String filePath = "D:\\JAVA.csv";
-        String apiResponse = "";
-        try {
-            apiResponse = makeFileUploadRequest(apiUrl, authorizationHeader, filePath);
-            System.out.println("API Response: " + apiResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return apiResponse;
+		// Additional code for file upload...
+		String apiUrl = "https://storage.googleapis.com/upload/storage/v1/b/pega_data/o?uploadType=media&name=JAVACSV.csv";
+		String authorizationHeader = "Bearer ya29.a0AfB_byAu1zsbbscrVT_8U0BHPHW4i6nbZVQoPrm_giPAXwmMGBpi-Tqj_IU_slCKTQpNRuqqQ8ffL_Tw0q0VW-j1nWMw-1xjGLHe97WdYkt3d4xoHmTU6nZtbD72HcD0dq8SbN6lPQaeb4taWJ_PXc6vDXLZ4vSPULD_vQaCgYKAdYSARMSFQHGX2MiFrCv4JeQhfwZOVzmMEqSPg0173";
+		String filePath = "D:\\JAVA.csv";
+		String apiResponse = "";
+		try {
+			apiResponse = makeFileUploadRequest(apiUrl, authorizationHeader, filePath);
+			System.out.println("API Response: " + apiResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return apiResponse;
 	}
 
-	
-	
-	
 }

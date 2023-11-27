@@ -50,29 +50,80 @@ public class Jira_Testing {
 
 		int maxResults = 1000;
 		int startAt = 0;
-		List<JsonNode> allIssues = new ArrayList<>();
+		List<Object> allIssues = new ArrayList<>();
 		// int total=0;
 		String outputFilePath = "D:\\file.json";
 		
 
-		try (FileWriter fileWriter = new FileWriter(outputFilePath)) {
+	//	try (FileWriter fileWriter = new FileWriter(outputFilePath)) {
+		try {
 			while (true) {
+				
+				
+//				 String jiraBaseUrl = "https://qim-dev.atlassian.net";
+//			        String projectKey = "QJP";
+//			        String username = "vikram221999@gmail.com";
+//			        String apiToken = "ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740";
+//
+//			        // Build the Jira API search URL
+//			        String apiUrl = jiraBaseUrl + "/rest/api/3/search";
+//			        String jqlQuery = "project=" + projectKey;
+//			        String fields = "issuetype,subtasks,summary,description";
+//
+//			        HttpResponse<JsonNode> response = Unirest.get(apiUrl)
+//			                .basicAuth(username, apiToken)
+//			                .header("Accept", "application/json")
+//			                .queryString("jql", jqlQuery)
+//			                .queryString("fields", fields)
+//			                .asJson();
+//			        
+			        
+			        
+			        String jiraBaseUrl = "http://172.16.1.86:8082";
+			        String projectKey = "MT";
+			        String username = "admin1";
+			        String apiToken = "123456";
 
-//				HttpResponse<JsonNode> response = Unirest.get("https://qim-dev.atlassian.net/rest/api/3/search")
-//						.basicAuth("vikram221999@gmail.com",
-//								"ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740")
-//						.header("Accept", "application/json").queryString("jql", "project =QJP")
+			        // Build the Jira API search URL
+			        String apiUrl = jiraBaseUrl + "/rest/api/2/search";
+			        String jqlQuery = "project=" + projectKey;
+			        String fields = "issuetype,subtasks,summary,description";
 
-				HttpResponse<JsonNode> response = Unirest.get("http://172.16.1.86:8082/rest/api/2/search")
-						.basicAuth("admin1", "123456").header("Accept", "application/json")
-						.queryString("jql", "project = MT")
-
-						.queryString("startAt", startAt).queryString("maxResults", maxResults).asJson();
+			        HttpResponse<JsonNode> response = Unirest.get(apiUrl)
+			                .basicAuth(username, apiToken)
+			                .header("Accept", "application/json")
+			                .queryString("jql", jqlQuery)
+			                .queryString("fields", fields)
+			                .queryString("startAt", startAt).queryString("maxResults", maxResults)
+			                .asJson();
+				
 
 				JsonNode responseBody = response.getBody();
 				Object demo = response.getBody().getObject().get("issues");
-				fileWriter.write(demo.toString());
+				//System.out.println(demo.toString());
+				
+			//	fileWriter.write(demo.toString());
+				
+				
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				 com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(demo.toString());
+
+		            // Process each issue in the array
+//		            for (com.fasterxml.jackson.databind.JsonNode issueNode : jsonNode) {
+//		                String key = issueNode.path("key").asText();
+//		                String summary = issueNode.path("fields").path("summary").asText();
+//		                String issueType = issueNode.path("fields").path("issuetype").path("name").asText();
+//
+//		                // Print or process the extracted information
+//		                System.out.println("Key: " + key);
+//		                System.out.println("Summary: " + summary);
+//		                System.out.println("Issue Type: " + issueType);
+//		                System.out.println("-----------");
+//		            }
+				
 				if (response.getStatus() == 200) {
+					allIssues.add(demo);
 
 				} else {
 					System.err.println("Request failed with status: " + response.getStatus());
@@ -88,14 +139,19 @@ public class Jira_Testing {
 					break;
 				}
 			}
+			try(FileWriter fileWriter = new FileWriter(outputFilePath)){
+				System.out.println(allIssues.toString());
+			fileWriter.write(allIssues.toString());
+			
 			System.out.println("JSON written to file: " + outputFilePath);
 			System.out.println("JSON file written successfully!");
+			}
 		} catch (UnirestException e) {
 			throw new RuntimeException(e);
 		}
 
 		String apiUrl = "https://storage.googleapis.com/upload/storage/v1/b/pega_data/o?uploadType=media&name=java.txt";
-		String authorizationHeader = "Bearer ya29.a0AfB_byAbsZunQD56L7yC1mN565XMwPrycg0rdbQmPe5fGSjG3qy16tH02kunN1gC9LyNfNQxIYk9Ne6dMV0Ew8RTar4oThQ0VVUUlk6e8dzK68CUvPlwgDKcDtzsQd1LjwLfgo2S7V1aZoW2cF163hvDcE1bS1F5U2RWHgaCgYKAeASARMSFQHGX2Mi1vmbqq249Xdd63olbtyZ-A0173";
+		String authorizationHeader = "Bearer ya29.a0AfB_byCYEJXV7-dYQdaTQmkhV6mCS-SrqU0_BufZ__2S8C-6hOUjg26AeQb8ewlZLoI0LPVtRNonUGF94gvmnbTRgLLHW8OeWCglDa1m2KJOv8F6ABVhWEmmPK7E5mCeMruC1g-Xleb3v_4-SHjAp0KfO7kQxYqx3Wbe5AaCgYKAW4SARMSFQHGX2MiMd-KBbhOA7oDp4u66zNtdg0173";
 		String filePath = "D:\\file.json";
 
 		String apiResponse = "";
@@ -564,179 +620,179 @@ public class Jira_Testing {
 	}
 
 	
-	@GetMapping("/getallCSV2")
-	public String getissueCSV2() throws Exception {
-
-		int maxResults = 1000;
-		int startAt = 0;
-		List<JsonNode> allIssues = new ArrayList<>();
-		// int total=0;
-		String outputFilePath = "D:\\JAVA.csv";
-		List<Object> listOfIsuue = new ArrayList<>();
-
-		try {
-			while (true) {
-//					HttpResponse<JsonNode> response = Unirest.get("http://172.16.1.86:8082/rest/api/2/search")
-//							.basicAuth("admin1", "123456")
-//							.header("Accept", "application/json")
-//							.queryString("jql", "project = MT")
-				HttpResponse<JsonNode> response = Unirest.get("https://qim-dev.atlassian.net/rest/api/3/search")
-						.basicAuth("vikram221999@gmail.com",
-								"ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740")
-//						
-//					HttpResponse<JsonNode> response = Unirest.get("http://172.16.1.86:8082/rest/api/2/search")
-//				.basicAuth("admin1", "123456")
-						.header("Accept", "application/json").queryString("jql", "project =QJP")
-						.queryString("startAt", startAt).queryString("maxResults", maxResults).asJson();
-
-				// JsonNode responseBody = response.getBody();
-				JsonNode responseBody = response.getBody();
-				Object demo = response.getBody().getObject().get("issues");
-				
-				ObjectMapper objectMapper = new ObjectMapper();
-				
-				
-				JsonNode jsonNode = objectMapper.readTree(response.getBody().toString());
-
-	            // Extract data from JSON and write to CSV
-	            String csvFilePath = "output.csv";
-	            try (FileWriter fileWriter = new FileWriter(csvFilePath);
-	                 CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader("Key", "Summary"))) {
-
-	                // Assuming the JSON structure has an array of "issues"
-	                for (JsonNode issueNode : jsonNode.get("issues")) {
-	                    String key = issueNode.get("key").asText();
-	                    String summary = issueNode.get("fields").get("summary").asText();
-	                    csvPrinter.printRecord(key, summary);
-	                }
-	            }
-
-	            System.out.println("CSV file has been created successfully.")
-				
-				
-				
-				
-				
-	            com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(responseBody.toString());
-	            
-	            System.out.println(listOfIsuue.toString());
-	            List<String[]> data = extractData(jsonNode);
-	            
-	            writeCsv("JAVA.csv", data);
-	            
-	            System.out.println("Conversion successful. CSV written to output.csv");
-
-				// System.err.println(listOfIsuue);
-				if (response.getStatus() == 200) {
-					System.out.println(demo);
-					listOfIsuue.add(demo);
-
-					// System.out.println(listOfIsuue.toString());
-					
-
-				} else {
-					System.err.println("Request failed with status: " + response.getStatus());
-					System.err.println("Response body: " + response.getBody());
-				}
-				int total = responseBody.getObject().getInt("total");
-				System.err.println(total);
-				startAt += maxResults;
-
-				if (startAt >= total) {
-					// All data has been retrieved
-					break;
-				}
-			}
-			
-		
-			
-			try {
-	            // Parse JSON
-//	            ObjectMapper objectMapper = new ObjectMapper();
-//	            JsonNode jsonNode = objectMapper.readTree(jsonInput);
-
-	            // Extract data
-	    //        List<String[]> data = extractData(jsonNode);
-
-	            // Write to CSV
-	   //         writeCsv("output.csv", data);
-
-	            System.out.println("Conversion successful. CSV written to output.csv");
-
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-			
-			
-			
-			
-			System.out.println(listOfIsuue);
-		//	convertJsonToCsv(listOfIsuue,outputFilePath);
-	
-			System.out.println("CSV written to file: " + outputFilePath);
-		
-		} catch (UnirestException e) {
-			throw new RuntimeException(e);
-		}
-
-		String apiUrl = "https://storage.googleapis.com/upload/storage/v1/b/pega_data/o?uploadType=media&name=JAVACSV.csv";
-		String authorizationHeader = "Bearer ya29.a0AfB_byAbsZunQD56L7yC1mN565XMwPrycg0rdbQmPe5fGSjG3qy16tH02kunN1gC9LyNfNQxIYk9Ne6dMV0Ew8RTar4oThQ0VVUUlk6e8dzK68CUvPlwgDKcDtzsQd1LjwLfgo2S7V1aZoW2cF163hvDcE1bS1F5U2RWHgaCgYKAeASARMSFQHGX2Mi1vmbqq249Xdd63olbtyZ-A0173";
-		String filePath = "D:\\JAVA.csv";
-		String apiResponse = "";
-		try {
-			apiResponse = makeFileUploadRequest(apiUrl, authorizationHeader, filePath);
-			System.out.println("API Response: " + apiResponse);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return apiResponse;
-	}
-
-	
-	private static List<String[]> extractData(com.fasterxml.jackson.databind.JsonNode jsonNode) {
-		System.err.println("<<<<<<<<<<<<<<<"+jsonNode);
-        List<String[]> data = new ArrayList<>();
-
-        // Extract headers
-        Iterator<String> fieldNames = jsonNode.get(0).get("fields").fieldNames();
-        List<String> headers = new ArrayList<>();
-        headers.add("Issue Type");
-        headers.add("Key");
-        headers.add("Summary");
-        headers.add("Assignee");
-        headers.add("Reporter");
-        headers.add("Priority");
-        headers.add("Status");
-        headers.add("Resolution");
-        headers.add("Created");
-        headers.add("Updated");
-        headers.add("Due date");
-        data.add(headers.toArray(new String[0]));
-
-        // Extract issue data
-        com.fasterxml.jackson.databind.JsonNode fields = jsonNode.get(0).get("fields");
-        List<String> issueData = new ArrayList<>();
-        issueData.add(fields.get("issuetype").get("name").asText());
-        issueData.add(jsonNode.get(0).get("key").asText());
-        issueData.add(fields.get("summary").asText());
-        issueData.add(fields.get("assignee").asText());
-        issueData.add(fields.get("reporter").asText());
-        issueData.add(fields.get("priority").get("name").asText());
-        issueData.add(fields.get("status").get("name").asText());
-        issueData.add(fields.get("resolution") != null ? fields.get("resolution").asText() : "");
-        issueData.add(fields.get("created").asText());
-        issueData.add(fields.get("updated").asText());
-        issueData.add(""); // Placeholder for "Due date" since it's not available in the provided JSON
-        data.add(issueData.toArray(new String[0]));
-
-        return data;
-    }
-	
-	private static void writeCsv(String fileName, List<String[]> data) throws Exception {
-        try (CSVWriter writer = new CSVWriter(new FileWriter(fileName))) {
-            writer.writeAll(data);
-        }
-    }
+//	@GetMapping("/getallCSV2")
+//	public String getissueCSV2() throws Exception {
+//
+//		int maxResults = 1000;
+//		int startAt = 0;
+//		List<JsonNode> allIssues = new ArrayList<>();
+//		// int total=0;
+//		String outputFilePath = "D:\\JAVA.csv";
+//		List<Object> listOfIsuue = new ArrayList<>();
+//
+//		try {
+//			while (true) {
+////					HttpResponse<JsonNode> response = Unirest.get("http://172.16.1.86:8082/rest/api/2/search")
+////							.basicAuth("admin1", "123456")
+////							.header("Accept", "application/json")
+////							.queryString("jql", "project = MT")
+//				HttpResponse<JsonNode> response = Unirest.get("https://qim-dev.atlassian.net/rest/api/3/search")
+//						.basicAuth("vikram221999@gmail.com",
+//								"ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740")
+////						
+////					HttpResponse<JsonNode> response = Unirest.get("http://172.16.1.86:8082/rest/api/2/search")
+////				.basicAuth("admin1", "123456")
+//						.header("Accept", "application/json").queryString("jql", "project =QJP")
+//						.queryString("startAt", startAt).queryString("maxResults", maxResults).asJson();
+//
+//				// JsonNode responseBody = response.getBody();
+//				JsonNode responseBody = response.getBody();
+//				Object demo = response.getBody().getObject().get("issues");
+//				
+//				ObjectMapper objectMapper = new ObjectMapper();
+//				
+//				
+//				JsonNode jsonNode = objectMapper.readTree(response.getBody().toString());
+//
+//	            // Extract data from JSON and write to CSV
+//	            String csvFilePath = "output.csv";
+//	            try (FileWriter fileWriter = new FileWriter(csvFilePath);
+//	                 CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT.withHeader("Key", "Summary"))) {
+//
+//	                // Assuming the JSON structure has an array of "issues"
+//	                for (JsonNode issueNode : jsonNode.get("issues")) {
+//	                    String key = issueNode.get("key").asText();
+//	                    String summary = issueNode.get("fields").get("summary").asText();
+//	                    csvPrinter.printRecord(key, summary);
+//	                }
+//	            }
+//
+//	            System.out.println("CSV file has been created successfully.")
+//				
+//				
+//				
+//				
+//				
+//	            com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(responseBody.toString());
+//	            
+//	            System.out.println(listOfIsuue.toString());
+//	            List<String[]> data = extractData(jsonNode);
+//	            
+//	            writeCsv("JAVA.csv", data);
+//	            
+//	            System.out.println("Conversion successful. CSV written to output.csv");
+//
+//				// System.err.println(listOfIsuue);
+//				if (response.getStatus() == 200) {
+//					System.out.println(demo);
+//					listOfIsuue.add(demo);
+//
+//					// System.out.println(listOfIsuue.toString());
+//					
+//
+//				} else {
+//					System.err.println("Request failed with status: " + response.getStatus());
+//					System.err.println("Response body: " + response.getBody());
+//				}
+//				int total = responseBody.getObject().getInt("total");
+//				System.err.println(total);
+//				startAt += maxResults;
+//
+//				if (startAt >= total) {
+//					// All data has been retrieved
+//					break;
+//				}
+//			}
+//			
+//		
+//			
+//			try {
+//	            // Parse JSON
+////	            ObjectMapper objectMapper = new ObjectMapper();
+////	            JsonNode jsonNode = objectMapper.readTree(jsonInput);
+//
+//	            // Extract data
+//	    //        List<String[]> data = extractData(jsonNode);
+//
+//	            // Write to CSV
+//	   //         writeCsv("output.csv", data);
+//
+//	            System.out.println("Conversion successful. CSV written to output.csv");
+//
+//	        } catch (Exception e) {
+//	            e.printStackTrace();
+//	        }
+//			
+//			
+//			
+//			
+//			System.out.println(listOfIsuue);
+//		//	convertJsonToCsv(listOfIsuue,outputFilePath);
+//	
+//			System.out.println("CSV written to file: " + outputFilePath);
+//		
+//		} catch (UnirestException e) {
+//			throw new RuntimeException(e);
+//		}
+//
+//		String apiUrl = "https://storage.googleapis.com/upload/storage/v1/b/pega_data/o?uploadType=media&name=JAVACSV.csv";
+//		String authorizationHeader = "Bearer ya29.a0AfB_byAbsZunQD56L7yC1mN565XMwPrycg0rdbQmPe5fGSjG3qy16tH02kunN1gC9LyNfNQxIYk9Ne6dMV0Ew8RTar4oThQ0VVUUlk6e8dzK68CUvPlwgDKcDtzsQd1LjwLfgo2S7V1aZoW2cF163hvDcE1bS1F5U2RWHgaCgYKAeASARMSFQHGX2Mi1vmbqq249Xdd63olbtyZ-A0173";
+//		String filePath = "D:\\JAVA.csv";
+//		String apiResponse = "";
+//		try {
+//			apiResponse = makeFileUploadRequest(apiUrl, authorizationHeader, filePath);
+//			System.out.println("API Response: " + apiResponse);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return apiResponse;
+//	}
+//
+//	
+//	private static List<String[]> extractData(com.fasterxml.jackson.databind.JsonNode jsonNode) {
+//		System.err.println("<<<<<<<<<<<<<<<"+jsonNode);
+//        List<String[]> data = new ArrayList<>();
+//
+//        // Extract headers
+//        Iterator<String> fieldNames = jsonNode.get(0).get("fields").fieldNames();
+//        List<String> headers = new ArrayList<>();
+//        headers.add("Issue Type");
+//        headers.add("Key");
+//        headers.add("Summary");
+//        headers.add("Assignee");
+//        headers.add("Reporter");
+//        headers.add("Priority");
+//        headers.add("Status");
+//        headers.add("Resolution");
+//        headers.add("Created");
+//        headers.add("Updated");
+//        headers.add("Due date");
+//        data.add(headers.toArray(new String[0]));
+//
+//        // Extract issue data
+//        com.fasterxml.jackson.databind.JsonNode fields = jsonNode.get(0).get("fields");
+//        List<String> issueData = new ArrayList<>();
+//        issueData.add(fields.get("issuetype").get("name").asText());
+//        issueData.add(jsonNode.get(0).get("key").asText());
+//        issueData.add(fields.get("summary").asText());
+//        issueData.add(fields.get("assignee").asText());
+//        issueData.add(fields.get("reporter").asText());
+//        issueData.add(fields.get("priority").get("name").asText());
+//        issueData.add(fields.get("status").get("name").asText());
+//        issueData.add(fields.get("resolution") != null ? fields.get("resolution").asText() : "");
+//        issueData.add(fields.get("created").asText());
+//        issueData.add(fields.get("updated").asText());
+//        issueData.add(""); // Placeholder for "Due date" since it's not available in the provided JSON
+//        data.add(issueData.toArray(new String[0]));
+//
+//        return data;
+//    }
+//	
+//	private static void writeCsv(String fileName, List<String[]> data) throws Exception {
+//        try (CSVWriter writer = new CSVWriter(new FileWriter(fileName))) {
+//            writer.writeAll(data);
+//        }
+//    }
 	
 	
 	
