@@ -33,6 +33,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.mashape.unirest</groupId>
 			<artifactId>unirest-java</artifactId>
@@ -53,11 +54,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -66,7 +67,6 @@
 		</dependency>
 
 
-		
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -83,13 +83,51 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.13.0</version>
 		</dependency>
-		
-		<dependency>
-    <groupId>com.opencsv</groupId>
-    <artifactId>opencsv</artifactId>
-    <version>5.8</version>
-</dependency>
 
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version> <!-- Use the latest version available -->
+		</dependency>
+
+		 <!-- Jira REST Java Client Core -->
+    <dependency>
+        <groupId>com.atlassian.jira</groupId>
+        <artifactId>jira-rest-java-client-core</artifactId>
+        <version>5.2.6</version>
+    </dependency>
+
+    <!-- Jira REST Java Client API -->
+    <dependency>
+        <groupId>com.atlassian.jira</groupId>
+        <artifactId>jira-rest-java-client-api</artifactId>
+        <version>5.2.6</version>
+    </dependency>
+    <dependency>
+			<groupId>io.atlassian.fugue</groupId>
+			<artifactId>fugue</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>2.16.0</version> <!-- Use the latest version available -->
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
+			<version>1.113.13</version> <!-- Replace with the latest version -->
+		</dependency>
+
+		
 	</dependencies>
 
 	<build>
