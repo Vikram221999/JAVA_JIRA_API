@@ -95,20 +95,19 @@
 			<version>4.5.13</version> <!-- Use the latest version available -->
 		</dependency>
 
-		 <!-- Jira REST Java Client Core -->
-    <dependency>
-        <groupId>com.atlassian.jira</groupId>
-        <artifactId>jira-rest-java-client-core</artifactId>
-        <version>5.2.6</version>
-    </dependency>
+		<!-- Jira REST Java Client Core -->
+		<dependency>
+			<groupId>com.atlassian.jira</groupId>
+			<artifactId>jira-rest-java-client-core</artifactId>
+			<version>5.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.jira</groupId>
+			<artifactId>jira-rest-java-client-api</artifactId>
+			<version>5.2.6</version> <!-- Replace with the version you are using -->
+		</dependency>
 
-    <!-- Jira REST Java Client API -->
-    <dependency>
-        <groupId>com.atlassian.jira</groupId>
-        <artifactId>jira-rest-java-client-api</artifactId>
-        <version>5.2.6</version>
-    </dependency>
-    <dependency>
+		<dependency>
 			<groupId>io.atlassian.fugue</groupId>
 			<artifactId>fugue</artifactId>
 			<version>5.0.0</version>
@@ -127,7 +126,7 @@
 			<version>1.113.13</version> <!-- Replace with the latest version -->
 		</dependency>
 
-		
+
 	</dependencies>
 
 	<build>

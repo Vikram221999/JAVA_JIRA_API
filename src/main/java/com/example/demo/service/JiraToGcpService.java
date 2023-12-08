@@ -67,9 +67,9 @@ public class JiraToGcpService {
 				        
 
 //				String jiraBaseUrl = "http://172.16.1.86:8082";
-//				String projectKey = "MT";
-//				String username = "admin1";
-//				String apiToken = "123456";
+//				String projectKey  = "MT";
+//				String username    = "admin1";
+//				String apiToken    = "123456";
 //
 //				// Build the Jira API search URL
 //				String apiUrl = jiraBaseUrl + "/rest/api/2/search";
@@ -189,10 +189,10 @@ public class JiraToGcpService {
 			String[] header = { "IssueKey","IssueId","IssueSelf", "Summary", "IssueType","IssueTypeId","IssueTypeSelf","IssueTypeDescription","IssueTypeiconUrl","SubtaskStatus" };
 			csvWriter.writeNext(header);
 			while (true) {
-//					 String jiraBaseUrl = "https://qim-dev.atlassian.net";
-//				        String projectKey = "QJP";
-//				        String username = "vikram221999@gmail.com";
-//				        String apiToken = "ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740";
+//					    String jiraBaseUrl = "https://qim-dev.atlassian.net";
+//				        String projectKey  = "QJP";
+//				        String username    = "vikram221999@gmail.com";
+//				        String apiToken    = "ATATT3xFfGF0K0M0dczSy-FqEcK_malSo4_clShvwjW_vsn8sIt8uApf0X5em6N7vtmHn2bsaeONhO_9XDpCrViRsi7d7WAgzlVIIP1QxvHaMcGsqDR_w5j32uRV7xkSNjW-v6Gq8hwbJ5yeje1nQZQz75ZaKOlYhY1BfKZu5iMIC-6QjqPb76s=01230740";
 				//
 //				        // Build the Jira API search URL
 //				        String apiUrl = jiraBaseUrl + "/rest/api/3/search";

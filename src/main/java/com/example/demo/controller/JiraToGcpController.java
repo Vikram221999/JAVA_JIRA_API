@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,14 +37,8 @@ public class JiraToGcpController{
 	@Autowired
 	private JiraConfiguration configuration ;
 	
-//	@Value("${app.username}")
-//    private String username;
-//
-//    @Value("${app.password}")
-//    private String password;
 
     @PostMapping("/jira/webhook")
-  //  @ResponseBody
     public String handleWebhook(@RequestHeader("Authorization") String authHeader,@RequestBody String requestBod ) {
     	//,@RequestBody String issueData
         // Process the incoming issue data
@@ -108,13 +103,12 @@ public class JiraToGcpController{
     	
     	//gcpService.createdIssuseFromJira(object);
 		return issue.linksIssuse(null, null);
-    	
     }
     
     @GetMapping("/issuesFromDirectJira")
-	public String getIssuseFromDirectJira() throws IOException {
+	public String getIssuseFromDirectJira() throws IOException, InterruptedException, ExecutionException {
 
-		return configuration.getIssuseFromDirectJira4();
+		return configuration.getIssuseFromDirectJira();
 //				issue.getIssue();
 	}
 //    @GetMapping("/issuesFromJira11")
