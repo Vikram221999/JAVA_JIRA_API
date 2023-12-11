@@ -1,13 +1,1 @@
-{
-  "type": "service_account",
-  "project_id": "pega-gcp-connect",
-  "private_key_id": "d7a3670dcb9a9a96829c75774d050b738bcb9c3e",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC6lp9FNzWwv8ps\nyVCjk2HVRlrujr1OEeSe1CwkedgBkeZ7hEWZ/BKLqoMfSj+tIRuW0iwIsHlas2yX\nkZGmi0hZM6yjRIKkqdDwFl6NrZr04Ej+FBzVq04wmjOZwkIh8PgmQbS0/2/qw/Vl\nhLfije+3d+wsx4OTx/KtJXPGYDCcOlEUWXitxO0LIse+EpRYyGPk2AgR2OMC8rOo\nJW+GyBHyQopnyVvhDUjAoh1O6dGqRA+TdmJONJd3+7OcCMmLX+VqM9Wm2HKyYdiu\nIvPpxMSDcLsr3zU4jbtG8ptlL8QXMFG6OsCXt4KhWyFTwFgCsls4r78L6dHcZZMQ\nuY1vh8qbAgMBAAECggEAGWLJy5x92QzXCSMAriisrFw0nfVcqyUDElryoInVSi1k\nCtUNtSwXB9qMmXK8JB13h/cTV6FO+Xik4yBCjUKw9rXxnIsDLU0PaMLaXXNLvFpR\nhAQPgkCa1ED+mUJVRhHnaSkSYXfJbcr4dbXvYMsH3NHbl6ITdEVFbqpETK6knnSS\n049bHiJEcA4d6kHKcbjnnSRmEir/4ie+vnrnjHOiYW9xbOnGFn1E5yAKg8zlXmfH\nqx0TKJ7e9zb4VEl6AKda2W/nqSxiyzRFrndJRiQ8MWyqKTzsfQVg8/hWl0zwp3/2\nH9OgTexV7QsaIhOhpQ+Mv51zekWMhN+Z0jtD1BlWVQKBgQD2N7fyytXSDhhsiBSs\nUhPOdP6/xrrQxB3EJtSs1dDXHHX7l51p+KR25fTDKn4JMJgr8UBjObTzaw59Z+1h\nVOoZr3hXAcW7pgMuGuGJ2hqkjm1LkKRxPycysKf/lNYcF3i6x/+Fr4tZxDbvVPh6\nqWt9Tmxxwl/I80REmcRb0+aLFwKBgQDCAGnrXXmeY3qlKMO7gntpLYbC6lh7YUf0\nOLryV0vuegtaOBWxrJg1xVi8wQ4yAfFst2vV8js8HWiRBdhb6ApnJaTpLI7gOz0B\nk5YtFNxm9/00CMJGKj3O2Mb/GzLMJcUfi0RmQkNVZdUxQgrl5ie8Ro/8X7BXTsqq\ngIQZo2ffHQKBgFK+Fss47vJQWlTexlPCoXVYS+QW3OEbhwVMJ1yN3kjr/5o1MWlT\nbbGnRcHwnbpo4jqiMIkn8296IrxyGIwFBUbsePyEU/bjq13rGrBA44M5efFTAnAs\nUPfv9gUl924pVSEv5OcAP0xDbFKxs29FUCIkIL16HMZjOiXzptFVPLyxAoGAYTcl\n3Lz9ueItzl+sHeWYBC+9LSWT61fnX7mh7NjUAxADalVagat0ptVaz1OK0oJowcr0\nbcSx7EDsamfccMnJlMCnb/VVL4Zf3s9fXP3sKGky6AVPnSuDx4iXx7SQcv6mVlVK\nlFe2ODAMcl+e6G+6D73oX1ZwHoAsTN6T0+kvnv0CgYEA6R6vZLr3CDtl/rq5fhBu\nsEtHTi5SyzuD+hL7JuxyRjrhkkeebKabc+7UzztX2RgorsUI9Zo9en231BwQaEXP\n6Q8mFoiRxeVMeA5gX4vhLkSdMLkHEmjxFYFwxeSA5khW2Nrkcb855mWF2FonToCw\nfL4yNADecZsMaKgdFUh5Hfo=\n-----END PRIVATE KEY-----\n",
-  "client_email": "pega-266@pega-gcp-connect.iam.gserviceaccount.com",
-  "client_id": "110678847365259234785",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/pega-266%40pega-gcp-connect.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-}
+
